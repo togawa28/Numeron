@@ -1,11 +1,14 @@
 package numeronTest.java;
 
+import numeron.java.OneGame;
 import numeron.java.*;
 
-public class HumanPlayable {
+public class UseNaiveFilteringSolver {
 
 	public static void main(String[] args) {
 		OneGame g = new OneGame();
+		NaiveFilteringSolver nfs = new NaiveFilteringSolver();
+		NVec randomTry;
 		boolean isContinue = true;
 		int gameCnt = 0;
 
@@ -13,8 +16,12 @@ public class HumanPlayable {
 		
 		while(isContinue) {
 			g.setGameCnt(gameCnt++);
-			g.setUserTry();
+			randomTry = nfs.getRandomTry();
+			g.setUserTry(randomTry);
+			randomTry.print();
+			System.out.println("try space size is " +  nfs.getTrySpaceSize());
 			g.showResult();
+			nfs.updateTrySpace(randomTry, g.getEat(), g.getBite());
 			if (g.isEnd()) {
 				isContinue = false;
 			}

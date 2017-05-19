@@ -5,25 +5,12 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class TrySpace extends HashSet<NVec> {
-	// TODO generalization?
-	private HashSet<Integer> firstDigitSet	= new HashSet<Integer> ();
-	private HashSet<Integer> secondDigitSet	= new HashSet<Integer> ();
-	private HashSet<Integer> thirdDigitSet	= new HashSet<Integer> ();
-	
-	public void updateEachDigitSet() {
-		firstDigitSet.clear();
-		secondDigitSet.clear();
-		thirdDigitSet.clear();
-		
-		for (NVec nv : this) {
-			firstDigitSet.add(nv.get(0));
-			secondDigitSet.add(nv.get(1));
-			thirdDigitSet.add(nv.get(2));
-		}
-	}
+	private static final long serialVersionUID = 1L;
+
+	public static final TrySpace wholeSpace = makeWholeSpace(); 
 	
 	public TrySpace() {
-		// TODO Auto-generated constructor stub
+		// TODO valid constructor?
 	}
 
 	public TrySpace(Collection<? extends NVec> c) {
@@ -43,19 +30,19 @@ public class TrySpace extends HashSet<NVec> {
 		return out;
 	}
 	
-	public static TrySpace makeWholeSet(){
-		TrySpace wholeSet = new TrySpace();
+	public static TrySpace makeWholeSpace(){
+		TrySpace wholeSpace = new TrySpace();
 		
 		for ( int i = 0; i <= 9; i++ ) {
 			for ( int j = 0; j <= 9; j++ ) {
 				for ( int k = 0; k <= 9; k++ ) {
 					if ( i != j && i != k && j != k) {
-						wholeSet.add(new NVec(new int[] {i, j, k}));						
+						wholeSpace.add(new NVec(new int[] {i, j, k}));						
 					}
 				}
 			}
 		}
-		return wholeSet;
+		return wholeSpace;
 	}
 	
 	public void print() {
@@ -79,56 +66,123 @@ public class TrySpace extends HashSet<NVec> {
 		return randomNVec;
 	}
 	
+	protected HashSet<Integer> makeDigitSpace (NVec nv) {
+		HashSet<Integer> digitSpace = new HashSet<Integer> ();
+		for (int i = 0; i <= 9; i++) {
+			digitSpace.add(i);
+		}
+		digitSpace.removeAll(nv);
+		
+		return digitSpace;
+	}
+	
 	public void update(NVec nv, int eat, int bite) {
-		// TODO check input
+		TrySpace trySpaceToRetain = new TrySpace();
+		
 		if (eat == 3) {
-			this.clear();
-			this.add(nv);
+			trySpaceToRetain.add(nv);
 		} 
 		else if (eat == 0 && bite == 3) {
-			this.clear();
-			this.add(new int[] {nv.get(1), nv.get(2), nv.get(0)});
-			this.add(new int[] {nv.get(2), nv.get(0), nv.get(1)});
+			trySpaceToRetain.add(new int[] {nv.get(1), nv.get(2), nv.get(0)});
+			trySpaceToRetain.add(new int[] {nv.get(2), nv.get(0), nv.get(1)});
 		}
 		else if (eat == 1 && bite == 2) {
-			this.clear();
 			// fix one digit and swap other two's
-			this.add(new int[] {nv.get(0), nv.get(2), nv.get(1)});
-			this.add(new int[] {nv.get(2), nv.get(1), nv.get(0)});
-			this.add(new int[] {nv.get(1), nv.get(0), nv.get(2)});
+			trySpaceToRetain.add(new int[] {nv.get(0), nv.get(2), nv.get(1)});
+			trySpaceToRetain.add(new int[] {nv.get(2), nv.get(1), nv.get(0)});
+			trySpaceToRetain.add(new int[] {nv.get(1), nv.get(0), nv.get(2)});
 		} 
 		else if (eat == 2 && bite == 0) {
 			// fix two digits and change another digit
-			updateEachDigitSet();
-			firstDigitSet.removeAll(nv);
-			secondDigitSet.removeAll(nv);
-			thirdDigitSet.removeAll(nv);
-			this.clear();
-			for (int i : thirdDigitSet) {
-				this.add(new int[] {nv.get(0), nv.get(1), i});
-			}
-			for (int i : secondDigitSet) {
-				this.add(new int[] {nv.get(0), i, nv.get(2)});
-			}
-			for (int i : firstDigitSet) {
-				this.add(new int[] {i, nv.get(1), nv.get(2)});
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i : digitSpace) {
+				trySpaceToRetain.add(new int[] {nv.get(0), nv.get(1), i});
+				trySpaceToRetain.add(new int[] {nv.get(0), i, nv.get(2)});
+				trySpaceToRetain.add(new int[] {i, nv.get(1), nv.get(2)});
 			}
 		}
 		else if (eat == 1 && bite == 1) {
 			// fix one digit and swap other two's and change one of them
-			updateEachDigitSet();
-			this.clear();
-			for (int i : thirdDigitSet) {
-				this.add(new int[] {nv.get(0), nv.get(2), i});
-			}
-			for (int i : secondDigitSet) {
-				this.add(new int[] {nv.get(0), i, nv.get(2)});
-			}
-			for (int i : firstDigitSet) {
-				this.add(new int[] {i, nv.get(1), nv.get(2)});
-			}
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i : digitSpace) {
+				trySpaceToRetain.add(new int[] {nv.get(0), i, nv.get(1)});
+				trySpaceToRetain.add(new int[] {nv.get(0), nv.get(2), i});
+				trySpaceToRetain.add(new int[] {i, nv.get(1), nv.get(0)});
+				trySpaceToRetain.add(new int[] {nv.get(2), nv.get(1), i});
+				trySpaceToRetain.add(new int[] {i, nv.get(0), nv.get(2)});
+				trySpaceToRetain.add(new int[] {nv.get(1), i, nv.get(2)});
+			}			
+		}
+		else if (eat == 0 && bite == 2) {
+			// rotate two digits and validate another
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i : digitSpace) {
+				// rotate 1st & 2nd, and validate 3rd
+				trySpaceToRetain.add(new int[] {nv.get(1), nv.get(0), i});
+				trySpaceToRetain.add(new int[] {nv.get(1), i, nv.get(0)});
+				trySpaceToRetain.add(new int[] {i, nv.get(0), nv.get(1)});
+				// rotate 1st & 3rd, and validate 2nd
+				trySpaceToRetain.add(new int[] {nv.get(2), nv.get(0), i});
+				trySpaceToRetain.add(new int[] {nv.get(2), i, nv.get(0)});
+				trySpaceToRetain.add(new int[] {i, nv.get(2), nv.get(0)});
+				// rotate 2nd & 3rd, and validate 1st
+				trySpaceToRetain.add(new int[] {nv.get(1), nv.get(2), i});
+				trySpaceToRetain.add(new int[] {nv.get(2), i, nv.get(1)});
+				trySpaceToRetain.add(new int[] {i, nv.get(2), nv.get(1)});
+			}			
 			
 		}
-		 
+		else if (eat == 1 && bite == 0) {
+			// fix one and validate other two
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i :digitSpace) {
+				for (int j : digitSpace) {
+					if( i!=j ) {
+						trySpaceToRetain.add(new int[] {nv.get(0), i, j});
+						trySpaceToRetain.add(new int[] {i, nv.get(1), j});
+						trySpaceToRetain.add(new int[] {i, j, nv.get(2)});
+					}
+				}
+			}
+		}
+		else if (eat == 0 && bite == 1) {
+			// rotate one and validate other two
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i :digitSpace) {
+				for (int j : digitSpace) {
+					if( i!=j ) {
+						trySpaceToRetain.add(new int[] {i, nv.get(0), j});
+						trySpaceToRetain.add(new int[] {i, j, nv.get(0)});
+						trySpaceToRetain.add(new int[] {nv.get(1), i, j});
+						trySpaceToRetain.add(new int[] {i, j, nv.get(1)});
+						trySpaceToRetain.add(new int[] {nv.get(2), i, j});
+						trySpaceToRetain.add(new int[] {i, nv.get(2), j});
+					}
+				}
+			}
+		}
+		else if (eat == 0 && bite == 0){
+			HashSet<Integer> digitSpace = makeDigitSpace(nv);
+			
+			for (int i :digitSpace) {
+				for (int j : digitSpace) {
+					for (int k : digitSpace) {
+						if( i!=j || i!=k || j!=k) {
+							trySpaceToRetain.add(new int[] {i, j, k});
+						}
+					}
+				}
+			}
+		}
+		else { // invalid eat/bite counts
+			return;
+		}
+		
+		this.retainAll(trySpaceToRetain);
 	}
 }

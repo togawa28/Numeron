@@ -5,7 +5,8 @@ import java.util.Collection;
 
 public class NVec extends ArrayList<Integer> {
 	// TODO define size?
-	
+	private static final long serialVersionUID = 1L;
+
 	public NVec() {
 		// TODO what to do?
 	}
@@ -31,8 +32,28 @@ public class NVec extends ArrayList<Integer> {
 		}
 	}
 	
-	public int hashCode() {
-		return super.hashCode();
+	public int countBite(NVec nv) {
+		if (this.isComparable(nv)) {
+			int cnt = 0;
+			for (int i = 0; i < nv.size(); i++) {
+				if ( this.indexOf(nv.get(i)) != -1 ) cnt++;
+			}
+			return cnt - countEat(nv);
+		} else {
+			return -1;
+		}
+	}
+	
+	public int countEat(NVec nv) {
+		if (nv.isComparable(this)) {
+			int cnt = 0;
+			for (int i = 0; i < this.size(); i++) {
+				if (this.get(i).equals(nv.get(i))) cnt++;
+			}
+			return cnt;			
+		} else {
+			return -1;
+		}
 	}
 	
 	public boolean equals(Object o) {
@@ -50,35 +71,8 @@ public class NVec extends ArrayList<Integer> {
 		return out;
 	}
 	
-	public void print() {
-		for (int i = 0; i < this.size(); i++) {
-			System.out.print(this.get(i));
-		}
-		System.out.println();
-	}
-	
-	public int countEat(NVec nv) {
-		if (nv.isComparable(this)) {
-			int cnt = 0;
-			for (int i = 0; i < this.size(); i++) {
-				if (this.get(i).equals(nv.get(i))) cnt++;
-			}
-			return cnt;			
-		} else {
-			return -1;
-		}
-	}
-	
-	public int countBite(NVec nv) {
-		if (this.isComparable(nv)) {
-			int cnt = 0;
-			for (int i = 0; i < nv.size(); i++) {
-				if ( this.indexOf(nv.get(i)) != -1 ) cnt++;
-			}
-			return cnt - countEat(nv);
-		} else {
-			return -1;
-		}
+	public int hashCode() {
+		return super.hashCode();
 	}
 	
 	public boolean isComparable(Object o) {
@@ -92,5 +86,12 @@ public class NVec extends ArrayList<Integer> {
 			}
 		}
 		return out;
+	}
+	
+	public void print() {
+		for (int i = 0; i < this.size(); i++) {
+			System.out.print(this.get(i));
+		}
+		System.out.println();
 	}
 }

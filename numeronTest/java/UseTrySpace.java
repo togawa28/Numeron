@@ -49,7 +49,7 @@ public class UseTrySpace {
 		ts3.print();
 		System.out.println("-----");
 		
-		TrySpace ts4 = TrySpace.makeWholeSet();
+		TrySpace ts4 = TrySpace.makeWholeSpace();
 		ts4.print();
 		System.out.println("----");
 		System.out.println("size:" + ts4.size());
@@ -78,9 +78,37 @@ public class UseTrySpace {
 		ts4.randomPick().print();
 		ts4.randomPick().print();
 		*/
-		ts4.update(new NVec("789"), 1, 2);
+		ts4 = TrySpace.makeWholeSpace();
+		ts4.update(new NVec("789"), 3, 0);
 		System.out.println("ts4 candidates printed....");
 		ts4.print();
+		System.out.println("ts4.size() = " + ts4.size());
+		
+		ts4 = TrySpace.makeWholeSpace();
+		ts4.update(new NVec("789"), 0, 1);
+		System.out.println("ts4.size() = " + ts4.size());
+		System.out.println(7*6*6);
+		
+		ts4 = TrySpace.makeWholeSpace();
+		ts4.update(new NVec("789"), 1, 0);
+		System.out.println("ts4.size() = " + ts4.size());
+		System.out.println(7*6*3);
+		
+		ts4 = TrySpace.makeWholeSpace();
+		ts4.update(new NVec("789"), 1, 1);
+		System.out.println("ts4.size() = " + ts4.size());
+		System.out.println(7*6);
+		
+		ts4 = TrySpace.makeWholeSpace();
+		ts4.update(new NVec("789"), 0, 0);
+		System.out.println("ts4.size() = " + ts4.size());
+		System.out.println(7*6*5);
+		
+		ts4.update(new NVec("456"), 0, 0);
+		System.out.println("ts4.size() = " + ts4.size());
+		System.out.println(4*3*2);
+		
+		
 	}
 
 }

@@ -2,21 +2,16 @@ package numeron.java;
 
 
 public class OneGame extends OneTry {
-	private static final TrySpace wholeSpace = TrySpace.makeWholeSet();
 	private int gameCnt = 0;
-	private TrySpace nextTrySpace = TrySpace.makeWholeSet();
 	
 	public OneGame() {
 		super();
-		this.setAns(wholeSpace.randomPick());
+		this.setAns(TrySpace.wholeSpace.randomPick());
 	}
 	public int getGameCnt() {
 		return gameCnt;
 	}
 	
-	public TrySpace getNextTrySpace() {
-		return nextTrySpace;
-	}
 	public void setGameCnt(int gameCnt) {
 		this.gameCnt = gameCnt;
 	}
